@@ -21,7 +21,7 @@
   --bg: #F3F5F8; --panel: #FFFFFF; --ink: #0B2C4F; --ink-2: #4A5D73; --ink-3: #7D8B9B; --line: #DCE2E9;
   --bad: #C0392B; --bad-soft: rgba(192,57,43,.12); --ok: #1E7F5C; --warn: #B86E25;
   --heat: 11,44,79;
-  --c1: #8FB0D1; --c2: #3D6A99; --c3: #E9A45F; --c4: #C98140; --c5: #B9C8D8; --c6: #6B7A8A; --c7: #F1CDA4;
+  --c1: #8FB0D1; --c2: #3D6A99; --c3: #E9A45F; --c4: #C98140; --c5: #B9C8D8; --c6: #6B7A8A; --c7: #F1CDA4; --c8: #5E8C6A; --c9: #A3708F; --c10: #C9B458;
   --rest: #E3E8EE;
   --font: 'Outfit', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --sat: env(safe-area-inset-top, 0px); --sab: env(safe-area-inset-bottom, 0px);
@@ -32,7 +32,7 @@
     --bg: #061A30; --panel: #0C2744; --ink: #EEF2F7; --ink-2: #B4C2D2; --ink-3: #8195AB; --line: #1D3D60;
     --bad: #F07A6B; --bad-soft: rgba(240,122,107,.16); --ok: #5FD0A2; --warn: #E9A45F;
     --heat: 233,164,95;
-    --c1: #8FB0D1; --c2: #4F7FB0; --c3: #E9A45F; --c4: #C98140; --c5: #C9D6E3; --c6: #7D8FA3; --c7: #F6DDBF;
+    --c1: #8FB0D1; --c2: #4F7FB0; --c3: #E9A45F; --c4: #C98140; --c5: #C9D6E3; --c6: #7D8FA3; --c7: #F6DDBF; --c8: #7FB58D; --c9: #C792B1; --c10: #E0CC72;
     --rest: #17385C;
   }
 }
@@ -394,7 +394,7 @@ body[data-page="bd"] .seg-slot, body[data-page="bd"] #src-line { display: none; 
 </nav>
 
 <script>
-const EMBEDDED = {"Monthly": [["Month", "Branch", "Revenue", "Nursing salaries", "Support salaries", "Doctor fees - fixed", "Doctor fees - variable", "Bonus & variable pay", "Social insurance & transport", "ValueCrest fee", "BrandRise fee"], ["2026-01", "Alexandria", 13078936, 1167611, 1066581, 1243376, 784341, 304580, 54911, 0, 0], ["2026-01", "Cairo", 7388303, 791402, 1131514, 685776, 346177, 242337, 64180, 0, 0], ["2026-01", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 0, 0], ["2026-02", "Alexandria", 11041918, 1177946, 1255961, 1090820, 671337, 411115, 51682, 0, 0], ["2026-02", "Cairo", 9833668, 883725, 1142600, 819595, 831413, 475384, 46682, 0, 0], ["2026-02", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 0, 0], ["2026-03", "Alexandria", 9281967, 1124521, 1165487, 748417, 545548, 449024, 59079, 0, 0], ["2026-03", "Cairo", 8781605, 864868, 1123054, 735426, 352506, 384371, 60574, 0, 0], ["2026-03", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 0, 0], ["2026-04", "Alexandria", 9902472, 1119358, 1162687, 897708, 573896, 383829, 49053, 0, 0], ["2026-04", "Cairo", 8656434, 806370, 1195914, 789909, 359394, 277433, 48104, 0, 0], ["2026-04", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 0, 0], ["2026-05", "Alexandria", 7951367, 887674, 1169607, 730772, 500047, 354499, 42237, 0, 0], ["2026-05", "Cairo", 8504294, 731003, 1115109, 870335, 409548, 373211, 49420, 0, 0], ["2026-05", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 0, 0], ["2026-06", "Alexandria", 7543694, 804712, 1111566, 679594, 446943, 420012, 39898, 0, 0], ["2026-06", "Cairo", 12401607, 1103739, 1204324, 1255458, 539954, 447082, 36327, 0, 0], ["2026-06", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 1000000, 0], ["2026-07", "Alexandria", 6965863, 705122, 1028514, 720618, 396873, 333132, 49581, 0, 0], ["2026-07", "Cairo", 13350104, 1111242, 1355302, 1471018, 754435, 512779, 54271, 0, 0], ["2026-07", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 1000000, 0], ["2026-08", "Alexandria", 5327500, 769973, 761130, 678026, 401204, 354732, 36206, 0, 0], ["2026-08", "Cairo", 9025198, 1102916, 1439889, 1413527, 532520, 305124, 57089, 0, 0], ["2026-08", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 1000000, 400000]], "Benchmarks": [["Metric ID", "Metric", "Low", "High", "Basis"], ["payroll_pct", "Employee payroll % of revenue", 0.18, 0.23, "Nursing + support salaries; excludes doctor fees, bonuses and overtime"], ["people_cost_pct", "Total people cost % of revenue", 0.3, 0.35, "Fully loaded people cost; High is the ceiling used across the report"], ["bonus_pct_payroll", "Bonus / variable pay % of payroll", 0.0, 0.2, "All bonus schemes"], ["si_pct_payroll", "Social insurance (with transport) % of payroll", 0.12, 0.18, "Employer social insurance share"], ["medical_pct_payroll", "Medical insurance % of payroll", 0.02, 0.06, "Not booked in the monthly data"], ["training_pct_payroll", "Training, engagement, uniforms % of payroll", 0.01, 0.04, "Not booked in the monthly data"]], "Revenue Targets": [["Month", "Revenue target"], ["2026-10", 24000000], ["2026-11", 28000000], ["2026-12", 33000000]], "Settings": [["Subscriptions fee forecast (monthly)", "Forecast starts (month)"], [1800000, "2026-09"]], "BD Teams": [["Month", "Team", "Short name", "Core sales", "Alex", "New Cairo", "Mohandessin", "Central", "Contract (monthly)", "Net paid"], ["2026-09", "Core Sales (medical, corporate, tele-sales, community)", "Core Sales", "Yes", 8, 14, 2, 0, 542000, 501733], ["2026-09", "Family Medicine programme", "Family Medicine", "No", 8, 1, 3, 0, 32500, 143366], ["2026-09", "Medical Concierge", "Medical Concierge", "No", 0, 0, 0, 14, 16000, 113347], ["2026-09", "CRM \u2013 moderation & patient experience", "CRM", "No", 1, 0, 1, 3, 28400, 30810]], "BD Monthly": [["Month", "Revenue (group)", "Sales salaries (fixed)", "Sales PMS", "Collection bonus", "Sales-driven case costs", "Estimated"], ["2026-01", null, 294122, 206109, 49977, 209540, null], ["2026-02", null, 275633, 310700, 35523, 387421, null], ["2026-03", null, 275633, 310700, 35523, 387421, "Yes"], ["2026-04", null, 271375, 94501, 35177, 455011, null], ["2026-05", null, 356251, 156145, 40237, 286132, null], ["2026-06", null, 518814, 119679, null, 458067, null], ["2026-07", null, 547071, 74056, null, 369641, null], ["2026-08", null, 523224, 91659, null, 298078, null], ["2026-09", 14141283, 501733, 100000, null, 275840, null]], "BD Targets": [["KPI ID", "KPI", "Target", "Unit", "Direction"], ["core_pct", "Core sales people cost % of revenue", 0.025, "pct", "lower"], ["var_share", "Variable share of core sales pay", 0.4, "pct", "higher"], ["unit_cost_pct", "Sales & BD unit cost % of revenue", 0.06, "pct", "lower"], ["rev_per_fte", "Revenue per core sales FTE per month", 1000000, "egp", "higher"]]};
+const EMBEDDED = {"Monthly": [["Month", "Branch", "Revenue", "Nursing salaries", "Support salaries", "Doctor fees - fixed", "Doctor fees - variable", "Bonus & variable pay", "Social insurance & transport", "Medical insurance", "ValueCrest fee", "BrandRise fee"], ["2026-01", "Alexandria", 13078936, 1167611, 1066581, 1243376, 784341, 304580, 54911, null, 0, 0], ["2026-01", "Cairo", 7388303, 791402, 1131514, 685776, 346177, 242337, 64180, null, 0, 0], ["2026-01", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, null, 0, 0], ["2026-02", "Alexandria", 11041918, 1177946, 1255961, 1090820, 671337, 411115, 51682, null, 0, 0], ["2026-02", "Cairo", 9833668, 883725, 1142600, 819595, 831413, 475384, 46682, null, 0, 0], ["2026-02", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, null, 0, 0], ["2026-03", "Alexandria", 9281967, 1124521, 1165487, 748417, 545548, 449024, 59079, null, 0, 0], ["2026-03", "Cairo", 8781605, 864868, 1123054, 735426, 352506, 384371, 60574, null, 0, 0], ["2026-03", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, null, 0, 0], ["2026-04", "Alexandria", 9902472, 1119358, 1162687, 897708, 573896, 383829, 49053, null, 0, 0], ["2026-04", "Cairo", 8656434, 806370, 1195914, 789909, 359394, 277433, 48104, null, 0, 0], ["2026-04", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, null, 0, 0], ["2026-05", "Alexandria", 7951367, 887674, 1169607, 730772, 500047, 354499, 42237, null, 0, 0], ["2026-05", "Cairo", 8504294, 731003, 1115109, 870335, 409548, 373211, 49420, null, 0, 0], ["2026-05", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, null, 0, 0], ["2026-06", "Alexandria", 7543694, 804712, 1111566, 679594, 446943, 420012, 39898, null, 0, 0], ["2026-06", "Cairo", 12401607, 1103739, 1204324, 1255458, 539954, 447082, 36327, null, 0, 0], ["2026-06", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, null, 1000000, 0], ["2026-07", "Alexandria", 6965863, 705122, 1028514, 720618, 396873, 333132, 49581, null, 0, 0], ["2026-07", "Cairo", 13350104, 1111242, 1355302, 1471018, 754435, 512779, 54271, null, 0, 0], ["2026-07", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, null, 1000000, 0], ["2026-08", "Alexandria", 5327500, 769973, 761130, 678026, 401204, 354732, 36206, null, 0, 0], ["2026-08", "Cairo", 9025198, 1102916, 1439889, 1413527, 532520, 305124, 57089, null, 0, 0], ["2026-08", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 500000, 1000000, 400000]], "Benchmarks": [["Metric ID", "Metric", "Low", "High", "Basis"], ["payroll_pct", "Employee payroll % of revenue", 0.18, 0.23, "Nursing + support salaries; excludes doctor fees, bonuses and overtime"], ["people_cost_pct", "Total people cost % of revenue", 0.3, 0.35, "Fully loaded people cost; High is the ceiling used across the report"], ["bonus_pct_payroll", "Bonus / variable pay % of payroll", 0.0, 0.2, "All bonus schemes"], ["si_pct_payroll", "Social insurance (with transport) % of payroll", 0.12, 0.18, "Employer social insurance share"], ["medical_pct_payroll", "Medical insurance % of payroll", 0.02, 0.06, "Not booked in the monthly data"], ["training_pct_payroll", "Training, engagement, uniforms % of payroll", 0.01, 0.04, "Not booked in the monthly data"]], "Revenue Targets": [["Month", "Revenue target"], ["2026-10", 24000000], ["2026-11", 28000000], ["2026-12", 33000000]], "Settings": [["Subscriptions fee forecast (monthly)", "Forecast starts (month)"], [1800000, "2026-09"]], "BD Teams": [["Month", "Team", "Short name", "Core sales", "Alex", "New Cairo", "Mohandessin", "Central", "Contract (monthly)", "Net paid"], ["2026-09", "Core Sales (medical, corporate, tele-sales, community)", "Core Sales", "Yes", 8, 14, 2, 0, 542000, 501733], ["2026-09", "Family Medicine programme", "Family Medicine", "No", 8, 1, 3, 0, 32500, 143366], ["2026-09", "Medical Concierge", "Medical Concierge", "No", 0, 0, 0, 14, 16000, 113347], ["2026-09", "CRM \u2013 moderation & patient experience", "CRM", "No", 1, 0, 1, 3, 28400, 30810]], "BD Monthly": [["Month", "Revenue (group)", "Sales salaries (fixed)", "Sales PMS", "Collection bonus", "Sales-driven case costs", "Estimated"], ["2026-01", null, 294122, 206109, 49977, 209540, null], ["2026-02", null, 275633, 310700, 35523, 387421, null], ["2026-03", null, 275633, 310700, 35523, 387421, "Yes"], ["2026-04", null, 271375, 94501, 35177, 455011, null], ["2026-05", null, 356251, 156145, 40237, 286132, null], ["2026-06", null, 518814, 119679, null, 458067, null], ["2026-07", null, 547071, 74056, null, 369641, null], ["2026-08", null, 523224, 91659, null, 298078, null], ["2026-09", 14141283, 501733, 100000, null, 275840, null]], "BD Targets": [["KPI ID", "KPI", "Target", "Unit", "Direction"], ["core_pct", "Core sales people cost % of revenue", 0.025, "pct", "lower"], ["var_share", "Variable share of core sales pay", 0.4, "pct", "higher"], ["unit_cost_pct", "Sales & BD unit cost % of revenue", 0.06, "pct", "lower"], ["rev_per_fte", "Revenue per core sales FTE per month", 1000000, "egp", "higher"]]};
 const SHEET_ID = "1-mYdj1212Gv8oUYVc6LMF5v2hsvZ5ANWETUdLg9Ch_A";
 (() => {
   const DEFAULT_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
@@ -402,23 +402,25 @@ const SHEET_ID = "1-mYdj1212Gv8oUYVc6LMF5v2hsvZ5ANWETUdLg9Ch_A";
   const STORE_KEY = 'carehub-people-cost-src';
   const store = { get: () => { try { return localStorage.getItem(STORE_KEY); } catch (e) { return null; } }, set: (v) => { try { v ? localStorage.setItem(STORE_KEY, v) : localStorage.removeItem(STORE_KEY); } catch (e) {} } };
 
-  const LINES = [
+  const BASE_LINES = [
     ['nursing_salaries', 'Nursing salaries', '--c1'],
     ['support_salaries', 'Support salaries (allocated)', '--c2'],
     ['doctor_fees_fixed', 'Doctor fees, fixed retainers', '--c3'],
     ['doctor_fees_variable', 'Doctor fees, per visit', '--c4'],
     ['bonus_variable_pay', 'Bonus & variable pay', '--c5'],
     ['social_insurance_transport', 'Social insurance & transport', '--c6'],
-    ['group_fees', 'Subscriptions fees', '--c7'],
   ];
-  const OPS = LINES.slice(0, 6).map((l) => l[0]);
+  const BASE_OPS = BASE_LINES.map((l) => l[0]);
+  const EXTRA_COLORS = ['--c8', '--c9', '--c10', '--c5', '--c6'];
+  let LINES = [...BASE_LINES, ['group_fees', 'Subscriptions fees', '--c7']];
+  let OPS = [...BASE_OPS];
   let BM = {}, CEIL = 0.35, CFG = {}, BD = null;
 
   const MN = (m) => new Date(m + '-01T00:00:00Z').toLocaleString('en', { month: 'short', timeZone: 'UTC' });
   const MNL = (m) => new Date(m + '-01T00:00:00Z').toLocaleString('en', { month: 'long', timeZone: 'UTC' });
   const p1 = (v) => (v * 100).toFixed(1) + '%';
   const p0 = (v) => Math.round(v * 100) + '%';
-  const K = (a) => (a >= 1e5 ? Math.round(a / 1e3) : (a / 1e3).toFixed(a >= 1e4 ? 1 : 2).replace(/\.?0+$/, '')) + 'K';
+  const K = (a) => (a < 0.5 ? '0' : a < 1000 ? String(Math.round(a)) : (a >= 1e5 ? Math.round(a / 1e3) : (a / 1e3).toFixed(a >= 1e4 ? 1 : 2).replace(/\.?0+$/, '')) + 'K');
   const M = (v) => { const a = Math.abs(v); return (v < 0 ? '−' : '') + 'EGP ' + (a >= 1e6 ? (a / 1e6).toFixed(1) + 'M' : K(a)); };
   const M2 = (v) => { const a = Math.abs(v); return (v < 0 ? '−' : '') + (a >= 1e6 ? (a / 1e6).toFixed(2) + 'M' : K(a)); };
   const pts = (v) => (v >= 0 ? '+' : '−') + Math.abs(v * 100).toFixed(1) + ' pts';
@@ -475,19 +477,26 @@ const SHEET_ID = "1-mYdj1212Gv8oUYVc6LMF5v2hsvZ5ANWETUdLg9Ch_A";
     const missing = Object.entries(col).filter(([, i]) => i < 0).map(([k]) => k);
     if (missing.length) throw new Error('Columns not found: ' + missing.join(', '));
     const feeCols = head.map((h, i) => (h.includes('fee') && !h.includes('doctor') ? i : -1)).filter((i) => i >= 0);
-    const branch = [], fees = {};
+    const used = new Set([...Object.values(col), ...feeCols]);
+    const extras = head.map((h, i) => ({ i, h })).filter(({ i, h }) => h && !used.has(i))
+      .map(({ i }) => { const label = String(rows[0][i]).trim(); return { i, key: 'x_' + label.toLowerCase().replace(/[^a-z0-9]+/g, '_'), label }; });
+    const branch = [], fees = {}, groupExtras = {};
     rows.slice(1).forEach((r) => {
       const month = parseMonth(r[col.month]); if (!month) return;
       const b = (r[col.branch] || '').trim();
       const f = feeCols.reduce((s, i) => s + num(r[i]), 0);
       fees[month] = (fees[month] || 0) + f;
-      if (!b || /^group|^total|^hq|subscri/i.test(b)) return;
+      if (!b || /^group|^total|^hq|subscri/i.test(b)) {
+        extras.forEach((x) => { const v = num(r[x.i]); if (v) { groupExtras[month] = groupExtras[month] || {}; groupExtras[month][x.key] = (groupExtras[month][x.key] || 0) + v; } });
+        return;
+      }
       const o = { month, branch: b };
-      ['revenue', ...OPS].forEach((k) => { o[k] = num(r[col[k]]); });
+      ['revenue', ...BASE_OPS].forEach((k) => { o[k] = num(r[col[k]]); });
+      extras.forEach((x) => { o[x.key] = num(r[x.i]); });
       if (o.revenue > 0) branch.push(o);
     });
     if (!branch.length) throw new Error('No branch rows with revenue were found.');
-    return { branch, fees: Object.entries(fees).map(([month, v]) => ({ month, group_fees: v })) };
+    return { branch, fees: Object.entries(fees).map(([month, v]) => ({ month, group_fees: v })), extras: extras.map(({ key, label }) => ({ key, label })), groupExtras };
   }
 
 
@@ -553,6 +562,10 @@ const SHEET_ID = "1-mYdj1212Gv8oUYVc6LMF5v2hsvZ5ANWETUdLg9Ch_A";
   // ---------- Model ----------
   let MODEL = null, view = 'Total', tab = 'overview';
   function build(data) {
+    const ex = data.extras || [];
+    LINES = [...BASE_LINES, ...ex.map((x, j) => [x.key, x.label, EXTRA_COLORS[j % EXTRA_COLORS.length]]), ['group_fees', 'Subscriptions fees', '--c7']];
+    OPS = [...BASE_OPS, ...ex.map((x) => x.key)];
+    const gx = data.groupExtras || {};
     const months = [...new Set(data.branch.map((r) => r.month))].sort();
     const branches = [...new Set(data.branch.map((r) => r.branch))];
     const feeOf = Object.fromEntries(data.fees.map((f) => [f.month, f.group_fees]));
@@ -562,7 +575,7 @@ const SHEET_ID = "1-mYdj1212Gv8oUYVc6LMF5v2hsvZ5ANWETUdLg9Ch_A";
       monthly[v] = months.map((m) => {
         const rows = data.branch.filter((r) => r.month === m && (v === 'Total' || r.branch === v));
         const o = { month: m, revenue: rows.reduce((s, r) => s + r.revenue, 0) };
-        OPS.forEach((k) => { o[k] = rows.reduce((s, r) => s + r[k], 0); });
+        OPS.forEach((k) => { o[k] = rows.reduce((s, r) => s + (r[k] || 0), 0) + (v === 'Total' && gx[m] && gx[m][k] ? gx[m][k] : 0); });
         o.group_fees = v === 'Total' ? (feeOf[m] || 0) : 0;
         o.payroll = o.nursing_salaries + o.support_salaries;
         o.operating = OPS.reduce((s, k) => s + o[k], 0);
@@ -587,7 +600,7 @@ const SHEET_ID = "1-mYdj1212Gv8oUYVc6LMF5v2hsvZ5ANWETUdLg9Ch_A";
     const per = `${MN(first)}–${MN(last)}`;
     return { months, branches, views, monthly, ytd, per, year: last.slice(0, 4) };
   }
-  const linesFor = (v) => LINES.filter(([k]) => v === 'Total' || k !== 'group_fees');
+  const linesFor = (v) => LINES.filter(([k]) => (v === 'Total' || k !== 'group_fees') && (!k.startsWith('x_') || !MODEL || (MODEL.ytd[v] && MODEL.ytd[v][k] > 0)));
   const vname = (v) => (v === 'Total' ? 'CareHub Group' : v);
 
   // ---------- Loading ----------
@@ -873,7 +886,7 @@ const SHEET_ID = "1-mYdj1212Gv8oUYVc6LMF5v2hsvZ5ANWETUdLg9Ch_A";
       cols.forEach((v) => {
         const y = MODEL.ytd[v]; let txt;
         if (k === '__tot') txt = p1(y.pct); else if (k === '__pay') txt = p1(y.payroll_pct); else if (k === '__rev') txt = M2(y.revenue);
-        else if (k === 'group_fees' && v !== 'Total') txt = '–'; else txt = p1(y[k] / y.revenue);
+        else if ((k === 'group_fees' || k.startsWith('x_')) && v !== 'Total' && !y[k]) txt = '–'; else txt = p1(y[k] / y.revenue);
         tr.append(el('td', { class: v === view ? 'cur' : '' }, txt));
       });
       tb.append(tr);
@@ -889,7 +902,11 @@ const SHEET_ID = "1-mYdj1212Gv8oUYVc6LMF5v2hsvZ5ANWETUdLg9Ch_A";
       ['people_cost_pct', y.pct],
       ['bonus_pct_payroll', y.bonus_pct],
       ['si_pct_payroll', y.si_pct, true],
-      ...Object.keys(BM).filter((k) => !['payroll_pct', 'people_cost_pct', 'bonus_pct_payroll', 'si_pct_payroll'].includes(k)).map((k) => [k, null]),
+      ...Object.keys(BM).filter((k) => !['payroll_pct', 'people_cost_pct', 'bonus_pct_payroll', 'si_pct_payroll'].includes(k)).map((k) => {
+        const word = k.split('_')[0];
+        const line = LINES.find(([lk]) => lk.startsWith('x_') && lk.includes(word));
+        return [k, line && y[line[0]] ? y[line[0]] / y.payroll : null];
+      }),
     ].filter(([k]) => BM[k]).map(([k, v, comp]) => [BM[k].label, BM[k], v, comp])
     .forEach(([label, b, v, comp]) => {
       const tr = el('tr');
