@@ -201,6 +201,42 @@ footer p { max-width: 100ch; margin: 0 0 8px; }
   .tabbar button[aria-selected="true"] svg { color: var(--orange); }
   .tabbar button:focus-visible { outline: 2px solid var(--orange); outline-offset: -2px; border-radius: 8px; }
 }
+
+/* Page nav (desktop) */
+.pages { display: flex; gap: 4px; }
+.seg-row { margin-top: 16px; }
+.pages button { appearance: none; border: 0; background: transparent; color: rgba(255,255,255,.65); padding: 10px 14px 12px; font-size: 15px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.pages button[aria-selected="true"] { color: #fff; font-weight: 600; border-bottom-color: var(--orange); }
+.pages button:focus-visible { outline: 2px solid #fff; outline-offset: -2px; border-radius: 6px; }
+body[data-page="bd"] .seg-slot, body[data-page="bd"] #src-line { display: none; }
+@media (min-width: 761px) {
+  body[data-page="main"] [data-tab="bd"] { display: none !important; }
+  body[data-page="bd"] [data-tab]:not([data-tab="bd"]) { display: none !important; }
+}
+.bd-kpis { margin-top: -60px; }
+.comp td.num, .comp th.num { text-align: right; }
+.comp td:first-child { white-space: normal; min-width: 190px; }
+.comp th { white-space: normal; vertical-align: bottom; }
+.over { color: var(--bad); font-weight: 600; }
+.tgt td.st { font-weight: 600; }
+.bd-month td.na { color: var(--ink-3); }
+.bd-month tr.pct td { color: var(--ink-2); font-size: 13px; }
+.bd-month tr.sub td:first-child { padding-left: 22px; }
+@media (max-width: 760px) {
+  .pages { display: none; }
+  .bd-kpis { margin-top: 0; }
+  .comp td:first-child, .comp th:first-child, .bd-month td:first-child, .bd-month th:first-child { position: sticky; left: 0; background: var(--panel); z-index: 1; min-width: 150px; max-width: 170px; white-space: normal; }
+  #bd-tgt, #bd-tgt tbody { display: block; }
+  #bd-tgt thead { display: none; }
+  #bd-tgt tr { display: flex; flex-wrap: wrap; column-gap: 14px; row-gap: 4px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  #bd-tgt td { border: 0; padding: 0; text-align: left; font-size: 13px; color: var(--ink-2); }
+  #bd-tgt td:nth-child(1) { flex: 1 1 100%; font-size: 15px; font-weight: 500; color: var(--ink); }
+  #bd-tgt td:nth-child(2)::before { content: "Target "; } #bd-tgt td:nth-child(3)::before { content: "Now "; }
+  #bd-tgt td:nth-child(3) { font-weight: 600; color: var(--ink); }
+  #bd-tgt td:nth-child(5) { margin-left: auto; }
+  #bd-tgt td.bad { color: var(--bad); } #bd-tgt td.ok { color: var(--ok); }
+  .tabbar button { font-size: 10.5px; }
+}
 @media (prefers-reduced-motion: no-preference) {
   @media (max-width: 760px) { [data-tab].on { animation: fadeIn .22s ease-out; } }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -224,7 +260,10 @@ footer p { max-width: 100ch; margin: 0 0 8px; }
           <p id="period-sub"></p>
         </div>
       </div>
-      <div class="seg-slot"><div class="seg" role="group" aria-label="Choose view" id="seg"></div></div>
+      <nav class="pages" role="tablist" aria-label="Pages" id="pages">
+            <button role="tab" data-p="main" aria-selected="true">People cost review</button>
+            <button role="tab" data-p="bd" aria-selected="false">Sales &amp; BD unit</button>
+          </nav>
       <div class="bar-actions">
         <button class="iconbtn" id="refresh" type="button" aria-label="Refresh data from sheet" title="Refresh data from sheet">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
@@ -232,6 +271,7 @@ footer p { max-width: 100ch; margin: 0 0 8px; }
       </div>
     </div>
     <p class="src" id="src-line"><i></i><span>Loading data…</span></p>
+    <div class="seg-slot seg-row"><div class="seg" role="group" aria-label="Choose view" id="seg"></div></div>
   </div>
 </header>
 
@@ -244,6 +284,15 @@ footer p { max-width: 100ch; margin: 0 0 8px; }
   </div>
 </div>
 
+
+<div class="band" data-tab="bd">
+  <div class="wrap">
+    <p class="summary" id="bd-summary"></p>
+    <p class="pound-cap" id="bd-cap"></p>
+    <div class="pound-bar" id="bd-bar" role="img" aria-label="Unit net payroll split by sub-team"></div>
+    <ul class="pound-legend" id="bd-legend"></ul>
+  </div>
+</div>
 <div class="wrap">
 <main>
   <div class="kpis" id="kpis" data-tab="overview"></div>
@@ -293,14 +342,45 @@ footer p { max-width: 100ch; margin: 0 0 8px; }
   </section>
 
   <section id="q4" data-tab="more">
-    <h2>What 35% would take in Q4</h2>
+    <h2 id="q4-title">What 35% would take in Q4</h2>
     <p class="lead" id="q4-lead"></p>
     <div class="q4" id="q4-cards"></div>
     <div class="callout" id="q4-callout"><p></p></div>
-    <p class="muted-note">Q4 revenue targets and the EGP 1.8M monthly subscriptions fee from September come from the management deck; the cost run rate is the latest month's operating people cost.</p>
+    <p class="muted-note" id="q4-note"></p>
   </section>
 
 
+
+  <div class="kpis bd-kpis" id="bd-kpis" data-tab="bd"></div>
+
+  <section id="bd-comp" data-tab="bd">
+    <h2>Unit composition, September</h2>
+    <p class="lead" id="bd-comp-lead"></p>
+    <div class="card"><div class="tw"><table class="comp" id="bd-comp-table"><thead></thead><tbody></tbody></table></div></div>
+  </section>
+
+  <section id="bd-trend" data-tab="bd">
+    <h2>Core sales cost against revenue</h2>
+    <p class="lead" id="bd-trend-lead"></p>
+    <div class="card">
+      <div class="keys" id="bd-keys"></div>
+      <div class="chart" id="bd-chart"></div>
+    </div>
+    <div class="card">
+      <h3>Month by month</h3>
+      <p class="note">Core sales lines and sales-driven case costs, with each as a % of group revenue.<span id="bd-est-note"></span></p>
+      <div class="tw"><table class="bd-month" id="bd-month"><thead></thead><tbody></tbody></table></div>
+    </div>
+  </section>
+
+  <section id="bd-targets" data-tab="bd">
+    <h2>Proposed targets</h2>
+    <p class="lead">Targets proposed for CEO approval, against September actuals.</p>
+    <div class="card"><div class="tw"><table class="tgt" id="bd-tgt">
+      <thead><tr><th>KPI</th><th>Target</th><th>September</th><th>Gap</th><th>Status</th></tr></thead>
+      <tbody></tbody>
+    </table></div></div>
+  </section>
 </main>
 </div>
 
@@ -309,14 +389,16 @@ footer p { max-width: 100ch; margin: 0 0 8px; }
   <button role="tab" data-t="lines" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h10M4 12h16M4 18h7"/></svg>Lines</button>
   <button role="tab" data-t="trend" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M4 15l5-5 4 3 7-7"/></svg>Trend</button>
   <button role="tab" data-t="branches" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V9l6-4 6 4v12"/><path d="M15 21v-8h6v8"/><path d="M7 12h4M7 16h4"/></svg>Branches</button>
+  <button role="tab" data-t="bd" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.8-4.8 5.5-4.8s4.9 1.8 5.5 4.8"/><path d="M15.5 6.2a3 3 0 0 1 0 5.6M17.5 14.6c1.6.6 2.7 2.1 3 4.4"/></svg>Sales &amp; BD</button>
   <button role="tab" data-t="more" aria-selected="false"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>More</button>
 </nav>
 
 <script>
-const EMBEDDED = {"branch": [{"branch": "Alexandria", "month": "2026-01", "revenue": 13078936, "nursing_salaries": 1167611, "support_salaries": 1066581, "doctor_fees_fixed": 1243376, "doctor_fees_variable": 784341, "bonus_variable_pay": 304580, "social_insurance_transport": 54911}, {"branch": "Alexandria", "month": "2026-02", "revenue": 11041918, "nursing_salaries": 1177946, "support_salaries": 1255961, "doctor_fees_fixed": 1090820, "doctor_fees_variable": 671337, "bonus_variable_pay": 411115, "social_insurance_transport": 51682}, {"branch": "Alexandria", "month": "2026-03", "revenue": 9281967, "nursing_salaries": 1124521, "support_salaries": 1165487, "doctor_fees_fixed": 748417, "doctor_fees_variable": 545548, "bonus_variable_pay": 449024, "social_insurance_transport": 59079}, {"branch": "Alexandria", "month": "2026-04", "revenue": 9902472, "nursing_salaries": 1119358, "support_salaries": 1162687, "doctor_fees_fixed": 897708, "doctor_fees_variable": 573896, "bonus_variable_pay": 383829, "social_insurance_transport": 49053}, {"branch": "Alexandria", "month": "2026-05", "revenue": 7951367, "nursing_salaries": 887674, "support_salaries": 1169607, "doctor_fees_fixed": 730772, "doctor_fees_variable": 500047, "bonus_variable_pay": 354499, "social_insurance_transport": 42237}, {"branch": "Alexandria", "month": "2026-06", "revenue": 7543694, "nursing_salaries": 804712, "support_salaries": 1111566, "doctor_fees_fixed": 679594, "doctor_fees_variable": 446943, "bonus_variable_pay": 420012, "social_insurance_transport": 39898}, {"branch": "Alexandria", "month": "2026-07", "revenue": 6965863, "nursing_salaries": 705122, "support_salaries": 1028514, "doctor_fees_fixed": 720618, "doctor_fees_variable": 396873, "bonus_variable_pay": 333132, "social_insurance_transport": 49581}, {"branch": "Alexandria", "month": "2026-08", "revenue": 5327500, "nursing_salaries": 769973, "support_salaries": 761130, "doctor_fees_fixed": 678026, "doctor_fees_variable": 401204, "bonus_variable_pay": 354732, "social_insurance_transport": 36206}, {"branch": "Cairo", "month": "2026-01", "revenue": 7388303, "nursing_salaries": 791402, "support_salaries": 1131514, "doctor_fees_fixed": 685776, "doctor_fees_variable": 346177, "bonus_variable_pay": 242337, "social_insurance_transport": 64180}, {"branch": "Cairo", "month": "2026-02", "revenue": 9833668, "nursing_salaries": 883725, "support_salaries": 1142600, "doctor_fees_fixed": 819595, "doctor_fees_variable": 831413, "bonus_variable_pay": 475384, "social_insurance_transport": 46682}, {"branch": "Cairo", "month": "2026-03", "revenue": 8781605, "nursing_salaries": 864868, "support_salaries": 1123054, "doctor_fees_fixed": 735426, "doctor_fees_variable": 352506, "bonus_variable_pay": 384371, "social_insurance_transport": 60574}, {"branch": "Cairo", "month": "2026-04", "revenue": 8656434, "nursing_salaries": 806370, "support_salaries": 1195914, "doctor_fees_fixed": 789909, "doctor_fees_variable": 359394, "bonus_variable_pay": 277433, "social_insurance_transport": 48104}, {"branch": "Cairo", "month": "2026-05", "revenue": 8504294, "nursing_salaries": 731003, "support_salaries": 1115109, "doctor_fees_fixed": 870335, "doctor_fees_variable": 409548, "bonus_variable_pay": 373211, "social_insurance_transport": 49420}, {"branch": "Cairo", "month": "2026-06", "revenue": 12401607, "nursing_salaries": 1103739, "support_salaries": 1204324, "doctor_fees_fixed": 1255458, "doctor_fees_variable": 539954, "bonus_variable_pay": 447082, "social_insurance_transport": 36327}, {"branch": "Cairo", "month": "2026-07", "revenue": 13350104, "nursing_salaries": 1111242, "support_salaries": 1355302, "doctor_fees_fixed": 1471018, "doctor_fees_variable": 754435, "bonus_variable_pay": 512779, "social_insurance_transport": 54271}, {"branch": "Cairo", "month": "2026-08", "revenue": 9025198, "nursing_salaries": 1102916, "support_salaries": 1439889, "doctor_fees_fixed": 1413527, "doctor_fees_variable": 532520, "bonus_variable_pay": 305124, "social_insurance_transport": 57089}], "fees": [{"month": "2026-01", "group_fees": 0}, {"month": "2026-02", "group_fees": 0}, {"month": "2026-03", "group_fees": 0}, {"month": "2026-04", "group_fees": 0}, {"month": "2026-05", "group_fees": 0}, {"month": "2026-06", "group_fees": 1000000}, {"month": "2026-07", "group_fees": 1000000}, {"month": "2026-08", "group_fees": 1400000}]};
-const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9Hvn7ReIEHUi43BdsfI9IKZIL0TLLbOn6SKD8ujUY/gviz/tq?tqx=out:csv", "benchmarks": {"payroll_pct": {"low": 0.18, "high": 0.23}, "people_cost_pct": {"low": 0.3, "high": 0.35}, "si_pct_payroll": {"low": 0.12, "high": 0.18}, "bonus_pct_payroll": {"low": 0, "high": 0.2}, "medical_pct_payroll": {"low": 0.02, "high": 0.06}, "training_pct_payroll": {"low": 0.01, "high": 0.04}}, "q4": {"monthly_group_fee": 1800000, "fee_from_month": "2026-09", "targets": [{"month": "2026-10", "revenue_target": 24000000.0}, {"month": "2026-11", "revenue_target": 28000000.0}, {"month": "2026-12", "revenue_target": 33000000.0}]}};
+const EMBEDDED = {"Monthly": [["Month", "Branch", "Revenue", "Nursing salaries", "Support salaries", "Doctor fees - fixed", "Doctor fees - variable", "Bonus & variable pay", "Social insurance & transport", "ValueCrest fee", "BrandRise fee"], ["2026-01", "Alexandria", 13078936, 1167611, 1066581, 1243376, 784341, 304580, 54911, 0, 0], ["2026-01", "Cairo", 7388303, 791402, 1131514, 685776, 346177, 242337, 64180, 0, 0], ["2026-01", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 0, 0], ["2026-02", "Alexandria", 11041918, 1177946, 1255961, 1090820, 671337, 411115, 51682, 0, 0], ["2026-02", "Cairo", 9833668, 883725, 1142600, 819595, 831413, 475384, 46682, 0, 0], ["2026-02", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 0, 0], ["2026-03", "Alexandria", 9281967, 1124521, 1165487, 748417, 545548, 449024, 59079, 0, 0], ["2026-03", "Cairo", 8781605, 864868, 1123054, 735426, 352506, 384371, 60574, 0, 0], ["2026-03", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 0, 0], ["2026-04", "Alexandria", 9902472, 1119358, 1162687, 897708, 573896, 383829, 49053, 0, 0], ["2026-04", "Cairo", 8656434, 806370, 1195914, 789909, 359394, 277433, 48104, 0, 0], ["2026-04", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 0, 0], ["2026-05", "Alexandria", 7951367, 887674, 1169607, 730772, 500047, 354499, 42237, 0, 0], ["2026-05", "Cairo", 8504294, 731003, 1115109, 870335, 409548, 373211, 49420, 0, 0], ["2026-05", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 0, 0], ["2026-06", "Alexandria", 7543694, 804712, 1111566, 679594, 446943, 420012, 39898, 0, 0], ["2026-06", "Cairo", 12401607, 1103739, 1204324, 1255458, 539954, 447082, 36327, 0, 0], ["2026-06", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 1000000, 0], ["2026-07", "Alexandria", 6965863, 705122, 1028514, 720618, 396873, 333132, 49581, 0, 0], ["2026-07", "Cairo", 13350104, 1111242, 1355302, 1471018, 754435, 512779, 54271, 0, 0], ["2026-07", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 1000000, 0], ["2026-08", "Alexandria", 5327500, 769973, 761130, 678026, 401204, 354732, 36206, 0, 0], ["2026-08", "Cairo", 9025198, 1102916, 1439889, 1413527, 532520, 305124, 57089, 0, 0], ["2026-08", "Subscriptions Fees", 0, 0, 0, 0, 0, 0, 0, 1000000, 400000]], "Benchmarks": [["Metric ID", "Metric", "Low", "High", "Basis"], ["payroll_pct", "Employee payroll % of revenue", 0.18, 0.23, "Nursing + support salaries; excludes doctor fees, bonuses and overtime"], ["people_cost_pct", "Total people cost % of revenue", 0.3, 0.35, "Fully loaded people cost; High is the ceiling used across the report"], ["bonus_pct_payroll", "Bonus / variable pay % of payroll", 0.0, 0.2, "All bonus schemes"], ["si_pct_payroll", "Social insurance (with transport) % of payroll", 0.12, 0.18, "Employer social insurance share"], ["medical_pct_payroll", "Medical insurance % of payroll", 0.02, 0.06, "Not booked in the monthly data"], ["training_pct_payroll", "Training, engagement, uniforms % of payroll", 0.01, 0.04, "Not booked in the monthly data"]], "Revenue Targets": [["Month", "Revenue target"], ["2026-10", 24000000], ["2026-11", 28000000], ["2026-12", 33000000]], "Settings": [["Subscriptions fee forecast (monthly)", "Forecast starts (month)"], [1800000, "2026-09"]], "BD Teams": [["Month", "Team", "Short name", "Core sales", "Alex", "New Cairo", "Mohandessin", "Central", "Contract (monthly)", "Net paid"], ["2026-09", "Core Sales (medical, corporate, tele-sales, community)", "Core Sales", "Yes", 8, 14, 2, 0, 542000, 501733], ["2026-09", "Family Medicine programme", "Family Medicine", "No", 8, 1, 3, 0, 32500, 143366], ["2026-09", "Medical Concierge", "Medical Concierge", "No", 0, 0, 0, 14, 16000, 113347], ["2026-09", "CRM \u2013 moderation & patient experience", "CRM", "No", 1, 0, 1, 3, 28400, 30810]], "BD Monthly": [["Month", "Revenue (group)", "Sales salaries (fixed)", "Sales PMS", "Collection bonus", "Sales-driven case costs", "Estimated"], ["2026-01", null, 294122, 206109, 49977, 209540, null], ["2026-02", null, 275633, 310700, 35523, 387421, null], ["2026-03", null, 275633, 310700, 35523, 387421, "Yes"], ["2026-04", null, 271375, 94501, 35177, 455011, null], ["2026-05", null, 356251, 156145, 40237, 286132, null], ["2026-06", null, 518814, 119679, null, 458067, null], ["2026-07", null, 547071, 74056, null, 369641, null], ["2026-08", null, 523224, 91659, null, 298078, null], ["2026-09", 14141283, 501733, 100000, null, 275840, null]], "BD Targets": [["KPI ID", "KPI", "Target", "Unit", "Direction"], ["core_pct", "Core sales people cost % of revenue", 0.025, "pct", "lower"], ["var_share", "Variable share of core sales pay", 0.4, "pct", "higher"], ["unit_cost_pct", "Sales & BD unit cost % of revenue", 0.06, "pct", "lower"], ["rev_per_fte", "Revenue per core sales FTE per month", 1000000, "egp", "higher"]]};
+const SHEET_ID = "1-mYdj1212Gv8oUYVc6LMF5v2hsvZ5ANWETUdLg9Ch_A";
 (() => {
-  const DEFAULT_URL = SETTINGS.sheet_csv_url;
+  const DEFAULT_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
+  const TABS = ['Monthly', 'Benchmarks', 'Revenue Targets', 'Settings', 'BD Teams', 'BD Monthly', 'BD Targets'];
   const STORE_KEY = 'carehub-people-cost-src';
   const store = { get: () => { try { return localStorage.getItem(STORE_KEY); } catch (e) { return null; } }, set: (v) => { try { v ? localStorage.setItem(STORE_KEY, v) : localStorage.removeItem(STORE_KEY); } catch (e) {} } };
 
@@ -330,8 +412,7 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
     ['group_fees', 'Subscriptions fees', '--c7'],
   ];
   const OPS = LINES.slice(0, 6).map((l) => l[0]);
-  const BM = SETTINGS.benchmarks;
-  const CEIL = BM.people_cost_pct.high;
+  let BM = {}, CEIL = 0.35, CFG = {}, BD = null;
 
   const MN = (m) => new Date(m + '-01T00:00:00Z').toLocaleString('en', { month: 'short', timeZone: 'UTC' });
   const MNL = (m) => new Date(m + '-01T00:00:00Z').toLocaleString('en', { month: 'long', timeZone: 'UTC' });
@@ -409,6 +490,66 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
     return { branch, fees: Object.entries(fees).map(([month, v]) => ({ month, group_fees: v })) };
   }
 
+
+  // ---------- Database tabs ----------
+  const H = (rows) => rows[0].map((h) => String(h).toLowerCase().trim());
+  const colOf = (head, ...tests) => head.findIndex((h) => tests.every((t) => h.includes(t)));
+  const pctN = (v) => { const n = num(v); return Math.abs(n) > 1 ? n / 100 : n; };
+  const truthy = (v) => /^(y|yes|true|1|x|✓)$/i.test(String(v == null ? '' : v).trim());
+  const body = (rows) => rows.slice(1).filter((r) => r.some((x) => String(x == null ? '' : x).trim() !== ''));
+  function parseBenchmarks(rows) {
+    const h = H(rows), id = colOf(h, 'id'), lab = h.findIndex((x) => x.includes('metric') && !x.includes('id')), lo = colOf(h, 'low'), hi = colOf(h, 'high'), bs = colOf(h, 'basis');
+    const out = {};
+    body(rows).forEach((r) => { const k = String(r[id] || '').trim(); if (k) out[k] = { label: lab >= 0 ? String(r[lab] || k) : k, low: pctN(r[lo]), high: pctN(r[hi]), basis: bs >= 0 ? String(r[bs] || '') : '' }; });
+    if (!out.people_cost_pct) throw new Error('people_cost_pct benchmark missing');
+    return out;
+  }
+  function parseRevTargets(rows) {
+    const h = H(rows), m = colOf(h, 'month'), v = colOf(h, 'target');
+    return body(rows).map((r) => ({ month: parseMonth(r[m]), revenue_target: num(r[v]) })).filter((x) => x.month && x.revenue_target > 0).sort((a, b) => (a.month < b.month ? -1 : 1));
+  }
+  function parseSettings(rows) {
+    const h = H(rows), r = body(rows)[0] || [];
+    const fee = h.findIndex((x) => x.includes('subscri') && (x.includes('forecast') || x.includes('fee')) && !x.includes('start') && !x.includes('from'));
+    const from = h.findIndex((x) => x.includes('start') || x.includes('from'));
+    return { fee_forecast: fee >= 0 ? num(r[fee]) : 0, fee_from: from >= 0 ? parseMonth(r[from]) : null };
+  }
+  function parseBDTeams(rows) {
+    const h = H(rows);
+    const m = colOf(h, 'month'), team = h.findIndex((x) => x === 'team' || (x.includes('team') && !x.includes('short'))), short = colOf(h, 'short'), core = colOf(h, 'core'), con = colOf(h, 'contract'), net = colOf(h, 'net');
+    const first = Math.max(m, team, short, core) + 1, last = Math.min(...[con, net].filter((i) => i >= 0));
+    const areaIdx = []; for (let i = first; i < last; i++) if (h[i]) areaIdx.push(i);
+    const areas = areaIdx.map((i) => String(rows[0][i]).trim());
+    let all = body(rows).map((r) => ({
+      month: m >= 0 ? parseMonth(r[m]) : null, name: String(r[team] || '').trim(), short: String((short >= 0 && r[short]) || r[team] || '').trim(), core: core >= 0 && truthy(r[core]),
+      hc_by_area: Object.fromEntries(areaIdx.map((i, j) => [areas[j], num(r[i])])), contract: num(r[con]), net_paid: num(r[net]),
+    })).filter((x) => x.name);
+    const months = [...new Set(all.map((x) => x.month).filter(Boolean))].sort();
+    const month = months[months.length - 1] || null;
+    if (month) all = all.filter((x) => x.month === month);
+    if (!all.length) throw new Error('no BD teams');
+    return { areas, teams: all, month };
+  }
+  function parseBDMonthly(rows) {
+    const h = H(rows);
+    const m = colOf(h, 'month'), rev = colOf(h, 'revenue'), fx = colOf(h, 'fixed'), pms = colOf(h, 'pms'), col = colOf(h, 'collection'), cs = colOf(h, 'case'), est = colOf(h, 'estimat');
+    const val = (r, i) => (i < 0 || r[i] == null || String(r[i]).trim() === '' ? null : num(r[i]));
+    return body(rows).map((r) => ({ month: parseMonth(r[m]), revenue: val(r, rev), sales_fixed: val(r, fx), sales_pms: val(r, pms), collection_bonus: val(r, col), case_costs: val(r, cs), estimated: est >= 0 && truthy(r[est]) }))
+      .filter((x) => x.month).sort((a, b) => (a.month < b.month ? -1 : 1));
+  }
+  function parseBDTargets(rows) {
+    const h = H(rows), id = colOf(h, 'id'), lab = h.findIndex((x) => x.includes('kpi') && !x.includes('id')), tg = colOf(h, 'target'), un = colOf(h, 'unit'), dr = colOf(h, 'direction');
+    return body(rows).map((r) => { const unit = /egp|amount|money|value/i.test(String(r[un] || '')) ? 'egp' : 'pct'; return { id: String(r[id] || '').trim(), kpi: String(r[lab] || r[id] || ''), target: unit === 'pct' ? pctN(r[tg]) : num(r[tg]), unit, direction: /high|up|more|max/i.test(String(r[dr] || '')) ? 'higher' : 'lower' }; }).filter((x) => x.id);
+  }
+  const PARSE = { 'Monthly': fromRows, 'Benchmarks': parseBenchmarks, 'Revenue Targets': parseRevTargets, 'Settings': parseSettings, 'BD Teams': parseBDTeams, 'BD Monthly': parseBDMonthly, 'BD Targets': parseBDTargets };
+  function applyDB(db) {
+    BM = db['Benchmarks']; CEIL = BM.people_cost_pct.high;
+    CFG = { targets: db['Revenue Targets'], ...db['Settings'] };
+    BD = { ...db['BD Teams'], monthly: db['BD Monthly'], targets: db['BD Targets'] };
+    MODEL = build(db['Monthly']);
+  }
+  function parseEmbedded() { const db = {}; TABS.forEach((tb) => { db[tb] = PARSE[tb](EMBEDDED[tb]); }); return db; }
+
   // ---------- Model ----------
   let MODEL = null, view = 'Total', tab = 'overview';
   function build(data) {
@@ -466,9 +607,9 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
   }
   const sheetId = (u) => { const m = String(u || '').match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]{20,})/); return m && !String(u).includes('/d/e/') ? m[1] : null; };
   // Reads the sheet through a <script> tag (no CORS needed)
-  function loadJsonp(id) {
+  function loadJsonp(id, sheet) {
     return new Promise((resolve, reject) => {
-      const cb = '__carehub' + Date.now();
+      const cb = '__carehub' + Date.now() + Math.floor(Math.random() * 1e6);
       const s = document.createElement('script');
       const done = () => { clearTimeout(timer); try { delete window[cb]; } catch (e) { window[cb] = undefined; } s.remove(); };
       const timer = setTimeout(() => { done(); reject(new Error('timeout')); }, 15000);
@@ -478,7 +619,7 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
         resolve(resp.table);
       };
       s.onerror = () => { done(); reject(new Error('not reachable')); };
-      s.src = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?headers=1&tqx=out:json;responseHandler:${cb}&_=${Date.now()}`;
+      s.src = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?headers=1&sheet=${encodeURIComponent(sheet)}&tqx=out:json;responseHandler:${cb}&_=${Date.now()}`;
       document.head.appendChild(s);
     });
   }
@@ -490,7 +631,7 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
     };
     let rows = table.rows.map((r) => (r.c || []).map(cell));
     const labels = table.cols.map((c) => c.label || '');
-    if (labels.some((l) => /month/i.test(l))) rows = [labels, ...rows];
+    if (labels.some((l) => String(l).trim() !== '')) rows = [labels, ...rows];
     return rows;
   }
   async function viaFetch(url) {
@@ -505,30 +646,43 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
   }
   async function load() {
     $('refresh').classList.add('spin');
-    const u = currentUrl(); const id = sheetId(u);
-    let data = null, why = '';
-    if (id) { try { data = fromRows(tableToRows(await loadJsonp(id))); } catch (e) { why = e.message; } }
-    if (!data && u) { try { data = await viaFetch(toCsvUrl(u)); } catch (e) { why = why || e.message; } }
-    if (data) {
-      MODEL = build(data);
-      const time = new Date().toLocaleString('en', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
-      setSource(true, `${MODEL.per} ${MODEL.year} · updated from sheet ${time}`);
-    } else {
-      MODEL = build(EMBEDDED);
-      setSource(false, `Saved data · ${MODEL.per} ${MODEL.year} · sheet not loaded` + (why ? ` (${why})` : ''));
-    }
+    const id = sheetId(currentUrl());
+    const emb = parseEmbedded();
+    const db = {}; const failed = [];
+    await Promise.all(TABS.map(async (tb) => {
+      try {
+        if (!id) throw new Error('no sheet');
+        db[tb] = PARSE[tb](tableToRows(await loadJsonp(id, tb)));
+      } catch (e) { db[tb] = emb[tb]; failed.push(tb); }
+    }));
+    try { applyDB(db); } catch (e) { applyDB(emb); failed.splice(0, failed.length, ...TABS); }
+    const time = new Date().toLocaleString('en', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+    if (!failed.length) setSource(true, `${MODEL.per} ${MODEL.year} · updated from database ${time}`);
+    else if (failed.length === TABS.length) setSource(false, `Saved data · ${MODEL.per} ${MODEL.year} · database not reachable`);
+    else setSource(false, `${MODEL.per} ${MODEL.year} · updated ${time} · saved data used for: ${failed.join(', ')}`);
     $('refresh').classList.remove('spin');
     if (!MODEL.views.includes(view)) view = 'Total';
-    render();
+    render(); renderBD(); setPage(document.body.dataset.page || 'main');
   }
   $('refresh').addEventListener('click', load);
 
   // ---------- Tabs ----------
+  function setPage(p) {
+    document.body.dataset.page = p;
+    const ps = $('period-sub');
+    if (p === 'bd' && BD) { const mo = BD.month || bdCalc().last.month; ps.textContent = `Sales & BD unit · ${MNL(mo)} ${mo.slice(0, 4)} payroll · Amounts in EGP`; }
+    else if (MODEL) ps.textContent = `${MNL(MODEL.months[0])} to ${MNL(MODEL.months[MODEL.months.length - 1])} ${MODEL.year} · Amounts in EGP`;
+    document.querySelectorAll('#pages button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.p === p)));
+    if (p === 'bd') renderBD();
+  }
+  document.querySelectorAll('#pages button').forEach((b) => b.addEventListener('click', () => { setTab(b.dataset.p === 'bd' ? 'bd' : 'overview'); window.scrollTo({ top: 0 }); }));
   function setTab(t) {
     tab = t;
+    setPage(t === 'bd' ? 'bd' : 'main');
     document.querySelectorAll('#tabbar button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.t === t)));
     document.querySelectorAll('[data-tab]').forEach((s) => s.classList.toggle('on', s.dataset.tab === t));
     if (t === 'trend') renderTrend();
+    if (t === 'bd') renderBDChart();
     window.scrollTo({ top: 0 });
   }
   document.querySelectorAll('#tabbar button').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.t)));
@@ -545,7 +699,7 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
   function render() {
     renderSeg();
     document.querySelectorAll('.per').forEach((s) => (s.textContent = MODEL.per));
-    $('period-sub').textContent = `${MNL(MODEL.months[0])} to ${MNL(MODEL.months[MODEL.months.length - 1])} ${MODEL.year} · Amounts in EGP`;
+    if (document.body.dataset.page !== 'bd') $('period-sub').textContent = `${MNL(MODEL.months[0])} to ${MNL(MODEL.months[MODEL.months.length - 1])} ${MODEL.year} · Amounts in EGP`;
     const y = MODEL.ytd[view];
     const rel = (v, w) => Math.abs(v * 100).toFixed(0) + '% ' + (v < 0 ? 'lower' : 'higher') + w;
     const sm = $('summary'); sm.innerHTML = '';
@@ -581,9 +735,9 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
     k.append(kpi(`Revenue, ${MODEL.per}`, M(y.revenue), `${MN(y.last.month)} vs ${MN(y.first.month)}: ${chg(y.last.revenue / y.first.revenue - 1)}`));
     k.append(kpi('People cost % of revenue', p1(y.pct), `${M(y.people)} · benchmark ${p0(BM.people_cost_pct.low)}–${p0(BM.people_cost_pct.high)}`, ...status(y.pct, BM.people_cost_pct)));
     k.append(kpi(`Spend above the ${p0(CEIL)} ceiling`, M(y.excess), `${y.over} of ${y.n} months over · ${MN(y.last.month)} alone ${M(y.last.excess)}`, null, null, y.excess > 0 ? 'bad' : 'ok'));
-    k.append(kpi('Employee payroll % of revenue', p1(y.payroll_pct), `Nursing + support · benchmark ${p0(BM.payroll_pct.low)}–${p0(BM.payroll_pct.high)}`, ...status(y.payroll_pct, BM.payroll_pct)));
+    k.append(kpi('Employee payroll % of revenue', p1(y.payroll_pct), ...(BM.payroll_pct ? [`Nursing + support · benchmark ${p0(BM.payroll_pct.low)}–${p0(BM.payroll_pct.high)}`, ...status(y.payroll_pct, BM.payroll_pct)] : ['Nursing + support'])));
     k.append(kpi(`${MNL(y.last.month)} people cost %`, p1(y.last.pct), `${pts(y.last.pct - y.prior.pct)} vs ${MNL(y.prior.month)}`, null, null, y.last.pct > CEIL ? 'bad' : 'ok'));
-    k.append(kpi('Social insurance & transport', p1(y.si_pct) + ' of payroll', `Employer SI alone: ${p0(BM.si_pct_payroll.low)}–${p0(BM.si_pct_payroll.high)}`, ...status(y.si_pct, BM.si_pct_payroll, true)));
+    k.append(kpi('Social insurance & transport', p1(y.si_pct) + ' of payroll', ...(BM.si_pct_payroll ? [`Employer SI alone: ${p0(BM.si_pct_payroll.low)}–${p0(BM.si_pct_payroll.high)}`, ...status(y.si_pct, BM.si_pct_payroll, true)] : [''])));
   }
 
   function renderLines(y) {
@@ -728,16 +882,16 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
 
   function renderScore() {
     const y = MODEL.ytd[view];
-    $('score-note').textContent = `${vname(view)}, ${MODEL.per}, against ValueCrest ranges.`;
+    $('score-note').textContent = `${vname(view)}, ${MODEL.per}, against benchmark ranges.`;
     const tb = $('score-table').querySelector('tbody'); tb.innerHTML = '';
     [
-      ['Employee payroll % of revenue', BM.payroll_pct, y.payroll_pct],
-      ['Total people cost % of revenue', BM.people_cost_pct, y.pct],
-      ['Bonus / variable pay % of payroll', BM.bonus_pct_payroll, y.bonus_pct],
-      ['Social insurance (with transport) % of payroll', BM.si_pct_payroll, y.si_pct, true],
-      ['Medical insurance % of payroll', BM.medical_pct_payroll, null],
-      ['Training, engagement, uniforms % of payroll', BM.training_pct_payroll, null],
-    ].forEach(([label, b, v, comp]) => {
+      ['payroll_pct', y.payroll_pct],
+      ['people_cost_pct', y.pct],
+      ['bonus_pct_payroll', y.bonus_pct],
+      ['si_pct_payroll', y.si_pct, true],
+      ...Object.keys(BM).filter((k) => !['payroll_pct', 'people_cost_pct', 'bonus_pct_payroll', 'si_pct_payroll'].includes(k)).map((k) => [k, null]),
+    ].filter(([k]) => BM[k]).map(([k, v, comp]) => [BM[k].label, BM[k], v, comp])
+    .forEach(([label, b, v, comp]) => {
       const tr = el('tr');
       tr.append(el('td', { style: 'white-space:normal' }, label), el('td', {}, `${p0(b.low)}–${p0(b.high)}`), el('td', {}, v == null ? '-' : p1(v)));
       if (v == null) tr.append(el('td', { class: 'st warn' }, 'Not booked'));
@@ -748,20 +902,23 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
 
   function renderQ4() {
     const g = MODEL.ytd.Total; const last = g.last;
-    const targets = SETTINGS.q4.targets.filter((t) => t.month > last.month);
+    const targets = (CFG.targets || []).filter((t) => t.month > last.month);
     const box = $('q4-cards'); box.innerHTML = '';
     const sec = $('q4');
     const hasQ4 = view === 'Total' && targets.length > 0;
     sec.style.display = hasQ4 ? '' : 'none';
     const moreBtn = document.querySelector('#tabbar button[data-t=more]');
     moreBtn.style.display = hasQ4 ? '' : 'none';
-    document.getElementById('tabbar').style.gridTemplateColumns = `repeat(${hasQ4 ? 5 : 4}, 1fr)`;
+    document.getElementById('tabbar').style.gridTemplateColumns = `repeat(${hasQ4 ? 6 : 5}, 1fr)`;
     if (!hasQ4) { if (tab === 'more') setTab('overview'); return; }
     const runOp = last.operating;
-    const fee = last.month >= SETTINGS.q4.fee_from_month && last.group_fees > 0 ? last.group_fees : SETTINGS.q4.monthly_group_fee;
+    const fee = CFG.fee_forecast > 0 && (!CFG.fee_from || CFG.fee_from > last.month) ? CFG.fee_forecast : last.group_fees;
     const run = runOp + fee;
     const avgRev = g.revenue / g.n; const need = run / CEIL;
-    $('q4-lead').textContent = `Current monthly run rate: ${M(runOp)} operating people cost (${MNL(last.month)}) plus ${M(fee)} subscriptions fees = ${M(run)} a month. Against the remaining Q4 revenue targets, this is what ${p0(CEIL)} leaves room for.`;
+    const inQ4 = targets.every((t2) => ['10', '11', '12'].includes(t2.month.slice(5)));
+    $('q4-title').textContent = `What ${p0(CEIL)} would take ${inQ4 ? 'in Q4' : 'in the coming months'}`;
+    $('q4-note').textContent = `Revenue targets come from the Revenue Targets tab` + (CFG.fee_forecast > 0 && fee === CFG.fee_forecast ? ` and the ${M(fee)} monthly subscriptions forecast${CFG.fee_from ? ' from ' + MNL(CFG.fee_from) : ''} from the Settings tab` : '') + `; the cost run rate is the latest month's operating people cost.`;
+    $('q4-lead').textContent = `Current monthly run rate: ${M(runOp)} operating people cost (${MNL(last.month)}) plus ${M(fee)} subscriptions fees = ${M(run)} a month. Against the remaining revenue targets, this is what ${p0(CEIL)} leaves room for.`;
     let tRev = 0, tCeil = 0;
     targets.forEach((t) => {
       const ceil = CEIL * t.revenue_target; tRev += t.revenue_target; tCeil += ceil; const room = ceil - run;
@@ -784,10 +941,187 @@ const SETTINGS = {"sheet_csv_url": "https://docs.google.com/spreadsheets/d/1tt9H
 
 
 
+
+  // ================= Sales & BD unit =================
+  const BDC = ['--c2', '--c1', '--c3', '--c6'];
+  function bdCalc() {
+    const AREAS = BD.areas;
+    const grpRev = Object.fromEntries((MODEL ? MODEL.monthly.Total : []).map((x) => [x.month, x.revenue]));
+    const teams = BD.teams.map((r) => ({ ...r, hc: AREAS.reduce((s, a) => s + (r.hc_by_area[a] || 0), 0) }));
+    const tot = { hc: teams.reduce((s, r) => s + r.hc, 0), contract: teams.reduce((s, r) => s + r.contract, 0), net: teams.reduce((s, r) => s + r.net_paid, 0) };
+    AREAS.forEach((a) => { tot[a] = teams.reduce((s, r) => s + (r.hc_by_area[a] || 0), 0); });
+    const months = BD.monthly.map((m0) => {
+      const m = { ...m0, revenue: m0.revenue != null && m0.revenue > 0 ? m0.revenue : (grpRev[m0.month] || null) };
+      const fixed = m.sales_fixed, pms = m.sales_pms, coll = m.collection_bonus;
+      const has = m.revenue != null && (fixed != null || pms != null || coll != null);
+      const core = has ? (fixed || 0) + (pms || 0) + (coll || 0) : null;
+      return { ...m, has, core, core_pct: has ? core / m.revenue : null, var_share: has && core ? ((pms || 0) + (coll || 0)) / core : null, case_pct: has && m.case_costs != null ? m.case_costs / m.revenue : null };
+    });
+    const act = months.filter((m) => m.has);
+    const last = act[act.length - 1], first = act[0];
+    const coreTeams = teams.filter((r) => r.core); const core = { hc: coreTeams.reduce((s, r) => s + r.hc, 0) || 1, net_paid: coreTeams.reduce((s, r) => s + r.net_paid, 0) };
+    const sum = (k) => act.reduce((s, m) => s + (m[k] || 0), 0);
+    const ytd = { revenue: sum('revenue'), sales_fixed: sum('sales_fixed'), sales_pms: sum('sales_pms'), collection_bonus: sum('collection_bonus'), core: sum('core'), case_costs: sum('case_costs') };
+    ytd.core_pct = ytd.core / ytd.revenue; ytd.var_share = (ytd.sales_pms + ytd.collection_bonus) / ytd.core; ytd.case_pct = ytd.case_costs / ytd.revenue;
+    const k = {
+      unit_cost_pct: (tot.net + (last.sales_pms || 0)) / last.revenue,
+      core_pct: last.core_pct,
+      var_share: last.var_share,
+      rev_per_fte: last.revenue / core.hc,
+      rev_per_egp: last.revenue / last.core,
+      avg_core_salary: core.net_paid / core.hc,
+      fixed_change: last.sales_fixed / first.sales_fixed - 1,
+      revenue_change: last.revenue / first.revenue - 1,
+    };
+    return { teams, tot, months, act, last, first, core, ytd, k, AREAS };
+  }
+  const tgtOf = (id) => BD.targets.find((x) => x.id === id) || { id, kpi: id, target: NaN, unit: 'pct', direction: 'lower' };
+  const statusT = (v, t) => (t.direction === 'lower' ? (v <= t.target ? ['● On target', 'ok'] : ['▲ Above target', 'bad']) : (v >= t.target ? ['● On target', 'ok'] : ['▼ Below target', 'bad']));
+  const fmtT = (v, unit) => (unit === 'pct' ? p1(v) : M(v));
+
+  function renderBD() {
+    const d = bdCalc(); const L = d.last;
+    const lm = MNL(L.month), fm = MNL(d.first.month);
+    // Summary
+    const s = $('bd-summary'); s.innerHTML = '';
+    const tu = tgtOf('unit_cost_pct');
+    s.append(
+      document.createTextNode(`The Sales & BD unit has ${d.tot.hc} people across ${d.teams.length} sub-teams. ${lm} net payroll was ${M(d.tot.net)}, `),
+      el('b', {}, p1(d.k.unit_cost_pct)),
+      document.createTextNode(` of revenue with sales PMS, against a ${p1(tu.target)} target. Core sales fixed salaries rose ${Math.round(d.k.fixed_change * 100)}% from ${fm} to ${lm}, while revenue was ${Math.abs(Math.round(d.k.revenue_change * 100))}% ${d.k.revenue_change < 0 ? 'lower' : 'higher'}.`)
+    );
+    $('bd-cap').textContent = `Unit net payroll by sub-team, ${lm}`;
+    const bar = $('bd-bar'); bar.innerHTML = ''; const leg = $('bd-legend'); leg.innerHTML = '';
+    d.teams.forEach((r, i) => {
+      const sh = r.net_paid / d.tot.net;
+      bar.append(el('div', { style: `width:${sh * 100}%;background:${cssv(BDC[i % BDC.length])}`, title: `${r.name}: ${p1(sh)}` }));
+      const li = el('li'); li.append(el('i', { style: `background:${cssv(BDC[i % BDC.length])}` }), el('span', {}, r.short), el('b', {}, `${M2(r.net_paid)} · ${p0(sh)}`)); leg.append(li);
+    });
+    const lastDiv = bar.lastElementChild; if (lastDiv) { lastDiv.style.borderRadius = '0 10px 10px 0'; lastDiv.style.borderRight = '0'; }
+
+    // KPIs
+    const k = $('bd-kpis'); k.innerHTML = '';
+    const AREAS = d.AREAS;
+    k.append(kpi('Unit headcount', String(d.tot.hc), AREAS.map((a) => `${a} ${d.tot[a]}`).join(' · ')));
+    k.append(kpi(`Net payroll, ${MN(L.month)}`, M(d.tot.net), `Contract ${M(d.tot.contract)} · paid ${chg(d.tot.net / d.tot.contract - 1)} above`, null, null, d.tot.net > d.tot.contract ? 'bad' : ''));
+    [['unit_cost_pct', 'Unit cost % of revenue', 'Net payroll + sales PMS'], ['core_pct', 'Core sales cost % of revenue', 'Fixed + PMS + collection bonus'], ['var_share', 'Variable share of core sales pay', 'PMS + collection bonus'], ['rev_per_fte', 'Revenue per core sales FTE', `${MN(L.month)} revenue ÷ ${d.core.hc} core sales staff`]].forEach(([id, title, sub]) => {
+      const tg = tgtOf(id); const v = d.k[id]; const [st, cls] = statusT(v, tg);
+      k.append(kpi(title, fmtT(v, tg.unit), `${sub} · target ${fmtT(tg.target, tg.unit)}`, st, cls));
+    });
+
+    // Composition table
+    const ct = $('bd-comp-table'); const th = ct.querySelector('thead'); const tb = ct.querySelector('tbody'); th.innerHTML = ''; tb.innerHTML = '';
+    const hr = el('tr'); hr.append(el('th', {}, 'Sub-team'));
+    AREAS.forEach((a) => hr.append(el('th', { class: 'num' }, a)));
+    ['Total HC', 'Contract (monthly)', `Net paid (${MN(L.month)})`, 'Net vs contract', '% of unit net', 'Avg net per head'].forEach((h) => hr.append(el('th', { class: 'num' }, h)));
+    th.append(hr);
+    const row = (name, byArea, hc, contract, net, cls, sw) => {
+      const tr = el('tr', { class: cls || '' });
+      const td0 = el('td'); if (sw) td0.append(el('span', { class: 'sw', style: `background:${cssv(sw)}` })); td0.append(document.createTextNode(name)); tr.append(td0);
+      AREAS.forEach((a) => tr.append(el('td', { class: 'num' }, byArea[a] ? String(byArea[a]) : '–')));
+      const diff = net - contract;
+      tr.append(el('td', { class: 'num' }, String(hc)), el('td', { class: 'num' }, M2(contract)), el('td', { class: 'num' }, M2(net)),
+        el('td', { class: 'num' + (diff > 0 ? ' over' : '') }, (diff > 0 ? '+' : diff < 0 ? '−' : '') + M2(Math.abs(diff))),
+        el('td', { class: 'num' }, p1(net / d.tot.net)), el('td', { class: 'num' }, M2(net / hc)));
+      tb.append(tr);
+    };
+    d.teams.forEach((r, i) => row(r.name, r.hc_by_area, r.hc, r.contract, r.net_paid, '', BDC[i % BDC.length]));
+    row('Total Sales & BD unit', Object.fromEntries(AREAS.map((a) => [a, d.tot[a]])), d.tot.hc, d.tot.contract, d.tot.net, 'tot');
+    const overTeams = d.teams.filter((r) => r.net_paid > r.contract * 1.2).sort((a, b) => (b.net_paid - b.contract) - (a.net_paid - a.contract));
+    $('bd-comp-lead').textContent = `Core sales is ${p0(d.core.net_paid / d.tot.net)} of the unit's net pay, at an average of ${M(d.k.avg_core_salary)} per head. The unit was paid ${M(d.tot.net - d.tot.contract)} more than its fixed contracts in ${lm}` + (overTeams.length ? `, mostly in ${overTeams.slice(0, 2).map((r) => r.short).join(' and ')}, where pay above contract is several times the contract itself.` : '.');
+
+    // Monthly table
+    const mt = $('bd-month'); const mh = mt.querySelector('thead'); const mb = mt.querySelector('tbody'); mh.innerHTML = ''; mb.innerHTML = '';
+    const h2 = el('tr'); h2.append(el('th', {}, 'Line')); d.months.forEach((m) => h2.append(el('th', {}, MN(m.month) + (m.estimated ? '*' : '')))); h2.append(el('th', {}, `${MN(d.first.month)}–${MN(L.month)}`)); mh.append(h2);
+    const tline = (label, get, fmt, cls, ytdV) => {
+      const tr = el('tr', { class: cls || '' }); tr.append(el('td', {}, label));
+      d.months.forEach((m) => { const v = m.has ? get(m) : null; tr.append(el('td', { class: v == null ? 'na' : '' }, v == null ? '–' : fmt(v))); });
+      tr.append(el('td', { style: 'font-weight:600;border-left:1px solid var(--line)' }, ytdV == null ? '' : fmt(ytdV)));
+      mb.append(tr);
+    };
+    const est = d.months.filter((m) => m.estimated).map((m) => MN(m.month));
+    $('bd-est-note').textContent = est.length ? ` *${est.join(', ')}: sales costs repeat the previous month; revenue is the group actual.` : '';
+    tline('Revenue (group)', (m) => m.revenue, M2, '', d.ytd.revenue);
+    tline('Sales salaries (fixed)', (m) => m.sales_fixed, M2, 'sub', d.ytd.sales_fixed);
+    tline('Sales PMS (variable)', (m) => m.sales_pms, M2, 'sub', d.ytd.sales_pms);
+    tline('Collection bonus (variable)', (m) => m.collection_bonus, M2, 'sub', d.ytd.collection_bonus);
+    tline('Core sales people cost', (m) => m.core, M2, 'tot', d.ytd.core);
+    tline('% of revenue', (m) => m.core_pct, p1, 'pct', d.ytd.core_pct);
+    tline('Variable share', (m) => m.var_share, p1, 'pct', d.ytd.var_share);
+    tline('Sales-driven case costs', (m) => m.case_costs, M2, '', d.ytd.case_costs);
+    tline('% of revenue', (m) => m.case_pct, p1, 'pct', d.ytd.case_pct);
+
+    // Targets
+    const tt = $('bd-tgt').querySelector('tbody'); tt.innerHTML = '';
+    BD.targets.forEach((tg) => {
+      const v = d.k[tg.id]; const [st, cls] = statusT(v, tg); const gap = v - tg.target;
+      const tr = el('tr');
+      tr.append(el('td', { style: 'white-space:normal' }, tg.kpi), el('td', {}, fmtT(tg.target, tg.unit)), el('td', {}, fmtT(v, tg.unit)),
+        el('td', { class: cls }, tg.unit === 'pct' ? pts(gap) : (gap > 0 ? '+' : '') + M(gap)), el('td', { class: 'st ' + cls }, st.replace(/^. /, '')));
+      tt.append(tr);
+    });
+    renderBDChart();
+  }
+
+  function renderBDChart() {
+    const box = $('bd-chart'); if (!box || !box.clientWidth) return;
+    const d = bdCalc(); const ms = d.months; const tg = tgtOf('core_pct').target;
+    box.innerHTML = '';
+    const keys = $('bd-keys'); keys.innerHTML = '';
+    const key = (style, txt, cls) => { const s = el('span'); s.append(el('i', { class: cls || '', style }), document.createTextNode(txt)); keys.append(s); };
+    key('background:var(--c2)', 'Fixed salaries', 'box'); key('background:var(--c3)', 'PMS', 'box'); key('background:var(--c4)', 'Collection bonus', 'box');
+    key('background:var(--navy-line, var(--ink))', 'Core sales cost % of revenue'); key('background:repeating-linear-gradient(90deg,var(--ok) 0 5px,transparent 5px 9px)', `Target ${p1(tg)}`);
+    const W = box.clientWidth, small = W < 520, H = small ? 260 : 320;
+    const m = { t: 22, r: small ? 40 : 54, b: 28, l: small ? 40 : 52 }; const fs = small ? 10 : 12;
+    const NS = 'http://www.w3.org/2000/svg'; const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', '100%'); svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', 'Core sales people cost by month and as a share of revenue');
+    const add = (tag, a, txt) => { const e = document.createElementNS(NS, tag); Object.entries(a).forEach(([k2, v]) => e.setAttribute(k2, v)); if (txt != null) e.textContent = txt; svg.append(e); return e; };
+    const maxC = Math.ceil(Math.max(...ms.filter((x) => x.has).map((x) => x.core)) * 1.9 / 2e5) * 2e5;
+    const maxP = Math.ceil(Math.max(tg * 1.6, ...ms.filter((x) => x.has).map((x) => x.core_pct * 1.15)) * 100) / 100;
+    const iw = W - m.l - m.r, ih = H - m.t - m.b, step = iw / ms.length, bw = Math.min(40, step * 0.55);
+    const X = (i) => m.l + step * i + step / 2, YC = (v) => m.t + ih - (v / maxC) * ih, YP = (v) => m.t + ih - (v / maxP) * ih;
+    const pstep = maxP > 0.06 ? 0.02 : 0.01;
+    for (let v = 0; v <= maxP + 1e-9; v += pstep) { add('line', { x1: m.l, x2: m.l + iw, y1: YP(v), y2: YP(v), stroke: 'var(--line)' }); add('text', { x: m.l + iw + 6, y: YP(v), dy: '0.35em', 'font-size': fs, fill: 'var(--ink-3)' }, p0(v)); }
+    for (let v = 0; v <= maxC + 1; v += maxC / 4) add('text', { x: m.l - 6, y: YC(v), dy: '0.35em', 'text-anchor': 'end', 'font-size': fs, fill: 'var(--ink-3)' }, v === 0 ? '0' : (v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : Math.round(v / 1e3) + 'K'));
+    ms.forEach((x, i) => {
+      add('text', { x: X(i), y: H - 8, 'text-anchor': 'middle', 'font-size': fs, fill: x.has && !x.estimated ? 'var(--ink-2)' : 'var(--ink-3)' }, (small ? MN(x.month).slice(0, 1) : MN(x.month)) + (x.estimated ? '*' : ''));
+      if (!x.has) { add('text', { x: X(i), y: m.t + ih - 8, 'text-anchor': 'middle', 'font-size': fs, fill: 'var(--ink-3)' }, 'n/a'); return; }
+      let y0 = YC(0);
+      [['sales_fixed', '--c2'], ['sales_pms', '--c3'], ['collection_bonus', '--c4']].forEach(([kk, c]) => { const v = x[kk] || 0; if (!v) return; const h = YC(0) - YC(v); add('rect', { x: X(i) - bw / 2, y: y0 - h, width: bw, height: h, fill: cssv(c) }); y0 -= h; });
+    });
+    add('line', { x1: m.l, x2: m.l + iw, y1: m.t + ih, y2: m.t + ih, stroke: 'var(--ink-3)' });
+    add('line', { x1: m.l, x2: m.l + iw, y1: YP(tg), y2: YP(tg), stroke: 'var(--ok)', 'stroke-dasharray': '5 4', 'stroke-width': 1.5 });
+    let dpath = '', pen = false;
+    ms.forEach((x, i) => { if (!x.has) { pen = false; return; } dpath += (pen ? 'L' : 'M') + X(i) + ',' + YP(x.core_pct); pen = true; });
+    add('path', { d: dpath, fill: 'none', stroke: 'var(--ink)', 'stroke-width': 2.5, 'stroke-linejoin': 'round' });
+    ms.forEach((x, i) => { if (!x.has) return; add('circle', { cx: X(i), cy: YP(x.core_pct), r: small ? 3 : 4, fill: 'var(--panel)', stroke: 'var(--ink)', 'stroke-width': 2 });
+      if (!small || i === ms.length - 1 || i === 0) add('text', { x: X(i), y: YP(x.core_pct) - 10, 'text-anchor': 'middle', 'font-size': fs, 'font-weight': 600, fill: x.core_pct > tg ? 'var(--bad)' : 'var(--ok)', stroke: 'var(--panel)', 'stroke-width': 3, 'paint-order': 'stroke' }, p1(x.core_pct)); });
+    const tip = el('div', { class: 'tip' });
+    ms.forEach((x, i) => {
+      if (!x.has) return;
+      const hit = add('rect', { x: m.l + step * i, y: m.t, width: step, height: ih, fill: 'transparent' });
+      const go = (ev) => {
+        tip.innerHTML = ''; tip.append(el('div', { class: 'h' }, MNL(x.month) + ' ' + x.month.slice(0, 4)));
+        const r = (a, b, c) => { const dd = el('div', { class: 'r' }); dd.append(el('span', {}, a), el('b', { class: c || '' }, b)); tip.append(dd); };
+        r('Revenue', M(x.revenue)); r('Fixed salaries', M(x.sales_fixed || 0)); r('PMS', M(x.sales_pms || 0)); r('Collection bonus', x.collection_bonus ? M(x.collection_bonus) : '–');
+        r('Core sales cost', M(x.core)); r('% of revenue', p1(x.core_pct), x.core_pct > tg ? 'bad' : 'ok'); r('Variable share', p1(x.var_share));
+        tip.style.display = 'block'; const bx = box.getBoundingClientRect();
+        tip.style.left = Math.min(Math.max(0, ev.clientX - bx.left + 12), bx.width - tip.offsetWidth) + 'px'; tip.style.top = Math.max(0, ev.clientY - bx.top - 30) + 'px';
+      };
+      hit.addEventListener('pointermove', go); hit.addEventListener('pointerdown', go);
+      hit.addEventListener('pointerleave', (ev) => { if (ev.pointerType === 'mouse') tip.style.display = 'none'; });
+    });
+    box.append(svg, tip);
+    const peak = d.act.reduce((a, b) => (b.core_pct > a.core_pct ? b : a));
+    $('bd-trend-lead').textContent = `Fixed sales salaries moved from ${M(d.first.sales_fixed)} in ${MNL(d.first.month)} to ${M(d.last.sales_fixed)} in ${MNL(d.last.month)}, while variable pay shrank. Core sales cost peaked at ${p1(peak.core_pct)} of revenue in ${MNL(peak.month)}, against a ${p1(tg)} target.` + (d.months.some((x) => x.estimated) ? ` *${d.months.filter((x) => x.estimated).map((x) => MNL(x.month)).join(', ')} repeats the previous month's sales costs.` : '') + (small ? ' Tap a month for details.' : '');
+  }
+  document.addEventListener('pointerdown', (e) => { if (!e.target.closest('#bd-chart')) { const tt = document.querySelector('#bd-chart .tip'); if (tt) tt.style.display = 'none'; } });
+
   let rt, lastW = window.innerWidth;
-  window.addEventListener('resize', () => { if (window.innerWidth === lastW) return; lastW = window.innerWidth; clearTimeout(rt); rt = setTimeout(() => MODEL && renderTrend(), 150); });
+  window.addEventListener('resize', () => { if (window.innerWidth === lastW) return; lastW = window.innerWidth; clearTimeout(rt); rt = setTimeout(() => { if (MODEL) renderTrend(); renderBDChart(); }, 150); });
+  document.body.dataset.page = 'main';
+  applyDB(parseEmbedded()); render(); renderBD();
   setTab('overview');
-  MODEL = build(EMBEDDED); render();
   load();
 })();
 </script>
